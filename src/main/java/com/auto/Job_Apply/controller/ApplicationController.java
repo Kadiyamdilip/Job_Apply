@@ -18,4 +18,10 @@ public class ApplicationController {
         service.runAutomation();
         return "Dice job automation started";
     }
+
+    @GetMapping("/")
+    public String FixedJobFlow() {
+        service.runFixedJobFlow();
+        return "Fixed job automation started";
+    }
 }
