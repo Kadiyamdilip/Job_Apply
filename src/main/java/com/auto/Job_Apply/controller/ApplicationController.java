@@ -1,6 +1,8 @@
 package com.auto.Job_Apply.controller;
 
+import com.auto.Job_Apply.dto.request.LoginRequest;
 import com.auto.Job_Apply.service.ApplicationService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,5 +25,13 @@ public class ApplicationController {
     public String FixedJobFlow() {
         service.runFixedJobFlow();
         return "Fixed job automation started";
+    }
+    @PostMapping("/linkedin/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+        service.execute(
+                request.getEmail(),
+                request.getPassword()
+        );
+        return ResponseEntity.ok("Login started");
     }
 }
