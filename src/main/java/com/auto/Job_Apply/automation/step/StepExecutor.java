@@ -48,12 +48,21 @@ public class StepExecutor {
             jobPage.navigate(jobUrl);
 
             try {
-                String jobTitle = jobPage.textContent("[data-cy='jobTitle']").trim();
+                String jobTitle;
+                if (jobPage.locator("[data-cy='jobTitle']").count() > 0) {
+                    jobTitle = jobPage.textContent("[data-cy='jobTitle']").trim();
+                } else {
+                    jobTitle = jobPage.locator("h1").first().textContent().trim();
+                }
                 System.out.println("Job Title: " + jobTitle);
-                jobPage.click(
-                        "a:has-text(\"Easy Apply\")"
-//                        new Page.ClickOptions().setTimeout(8000)
-                );
+                Locator easyApply = jobPage.locator("a:has-text(\"Easy Apply\")");
+                Locator applybutton = jobPage.locator("[data-testid='apply-button']");
+
+                if (easyApply.count() > 0) {
+                    easyApply.first().click();
+                } else if(applybutton.count() > 0) {
+                    applybutton.first().click();
+                }
                 jobPage.locator("span:has-text('Next')").click();
 //                jobPage.locator("span.flex.items-center.justify-center.gap-2.align-middle").click();
 //                jobPage.locator("span:has-text('Replace')").click();
@@ -63,7 +72,7 @@ public class StepExecutor {
                 System.out.println("Cover letter uploaded successfully!");
                 Locator nextButton = jobPage.locator("button:has-text('Next')");
 
-                if (nextButton.isVisible()) {
+                if (nextButton.count()>0) {
                     nextButton.click();
                 }
                 jobPage.locator("button:has-text('Submit')").click();
