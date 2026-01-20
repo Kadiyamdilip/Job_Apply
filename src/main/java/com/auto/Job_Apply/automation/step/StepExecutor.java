@@ -63,9 +63,12 @@ public class StepExecutor {
                 } else if(applybutton.count() > 0) {
                     applybutton.first().click();
                 }
-                jobPage.locator("span:has-text('Next')").click();
-//                jobPage.locator("span.flex.items-center.justify-center.gap-2.align-middle").click();
-//                jobPage.locator("span:has-text('Replace')").click();
+                Locator next =  jobPage.locator("span:has-text('Next')");
+                if (next.count() > 0) {
+                    next.first().click();
+                }
+                jobPage.locator("button:has(svg)").first().click();
+                jobPage.locator("span:has-text('Replace')").click();
 //                jobPage.locator("input[type='file']").nth(0).setInputFiles(
 //                                Paths.get("/Users/kadiyamdilipkumar/Downloads/DILIP KUMAR K_ Java Developer.docx")
 //                        );
@@ -75,7 +78,10 @@ public class StepExecutor {
                 if (nextButton.count()>0) {
                     nextButton.click();
                 }
-                jobPage.locator("button:has-text('Submit')").click();
+                Locator submitButton = jobPage.locator("button:has-text('Submit')");
+                if (submitButton.count()>0) {
+                    submitButton.click();
+                }
                 jobPage.waitForTimeout(10000);
                 System.out.println("Applied: " + jobUrl);
             } catch (Exception e) {
