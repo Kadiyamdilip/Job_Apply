@@ -21,24 +21,43 @@ public class ResumeService {
                 XWPFParagraph para = paragraphs.get(i);
                 String text = para.getText().trim();
 
-                if (text.equalsIgnoreCase("Professional Summary")) {
+                if (text.equalsIgnoreCase("Professional Summary:")) {
                     summaryFound = true;
 
-                    // Remove old points (next 5 paragraphs)
-                    for (int j = 0; j < 5; j++) {
-                        if (i + 1 < paragraphs.size()) {
-                            document.removeBodyElement(document.getPosOfParagraph(paragraphs.get(i + 1)));
+                    // Remove old points until the next header (paragraph ending with ':') or end of doc
+                    int removeIndex = i + 1;
+                    while (removeIndex < document.getParagraphs().size()) {
+                        XWPFParagraph nextPara = document.getParagraphs().get(removeIndex);
+                        if (nextPara.getText().trim().endsWith(":")) {
+                            break; // next section header reached
                         }
+                        document.removeBodyElement(document.getPosOfParagraph(nextPara));
+                        // do not increment removeIndex because list shrinks
                     }
 
-                    // Add new points
-                    for (String point : points) {
-                        XWPFParagraph newPara = document.insertNewParagraph(paragraphs.get(i).getCTP().newCursor());
+                    // Add new bullet points below the summary
+                    int summaryIndex = document.getPosOfParagraph(paragraphs.get(i));
+
+                    for (int j = 0; j < points.size(); j++) {
+                        XWPFParagraph newPara = document.createParagraph();
+
+                        // Line spacing = 1.0 (single spacing)
+                        newPara.setSpacingBetween(0);
+
                         XWPFRun run = newPara.createRun();
-                        run.setText("• " + point);
+                        run.setText("• " + points.get(j));
+
+                        // Font style
+                        run.setFontFamily("Calibri");
+                        run.setFontSize(12);
+
+                        // Insert at correct position
+                        document.setParagraph(newPara, summaryIndex + 1 + j);
                     }
-                    break;
+
+                    break; // summary processed, exit loop
                 }
+
             }
 
             if (!summaryFound) {

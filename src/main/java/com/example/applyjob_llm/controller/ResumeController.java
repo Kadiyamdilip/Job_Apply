@@ -14,12 +14,25 @@ public class ResumeController {
     @Autowired
     private ResumeService resumeService;
 
-    @PostMapping("/update")
-    public String updateResume(@RequestBody UpdateRequest request) {
+    @GetMapping("/update")
+    public String updateResume() {
+
+        // ✅ Hardcoded resume paths (update if needed)
+        String resumePath = "/Users/kadiyamdilipkumar/Documents/DILIP_KUMAR_K_Java_Developer.docx";
+        String updatedResumePath = "/Users/kadiyamdilipkumar/Documents/updated_resume.docx";
+
+        // ✅ Hardcoded points
+        List<String> points = List.of(
+                "Strong experience in Java and Spring Boot",
+                "Hands-on with REST APIs and Microservices",
+                "Experience with Maven and Git",
+                "Understanding of CI/CD pipelines"
+        );
+
         return resumeService.updateResume(
-                request.getResumePath(),
-                request.getUpdatedResumePath(),
-                request.getPoints()
+                resumePath,
+                updatedResumePath,
+                points
         );
     }
 
